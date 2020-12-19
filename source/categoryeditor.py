@@ -7,6 +7,7 @@ CONTENTS:
 import tkinter as tk
 import pickle
 from tkinter import messagebox
+from utilities import parse_linkfile
 
 WINDOW_GEOMETRY = '1600x900'
 
@@ -34,7 +35,11 @@ class Window(tk.Toplevel):
         # Get Uncategorized Names
         self.textin = tk.Text(self.frame, width=50, height=50)
         self.textin.pack(side=tk.LEFT, padx=100)
-        self.get_recenty_added()
+        with open('linkfile.txt') as lf:
+            names = parse_linkfile(lf)[0]
+            for name in names:
+                self.textin.insert('end', name + '\n')
+        #self.get_recenty_added()
 
         # Dictionary to Hold Categories
         self.cat_dict = dict()
