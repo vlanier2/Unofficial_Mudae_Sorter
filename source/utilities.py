@@ -12,10 +12,10 @@ def parse_linkfile(openfile):
     
     line = openfile.readline()
     while line:
-        line = line.strip()
+        line = line.rstrip()
         if line == '': pass
         else:
-            split_line = line.split('-')
+            split_line = line.rsplit('-', 1)
             names.append(split_line[0].strip())
             links.append(split_line[1].strip())
         line = openfile.readline()

@@ -2,6 +2,7 @@ import tkinter as tk
 from PIL import ImageTk, Image
 from utilities import parse_linkfile, get_url_dict, img_from_url
 import nameshower
+from tkinter import messagebox
 
 class SortingGrid(tk.Canvas):
     def __init__(self, master, tiledims, link_dict, names, **kw):
@@ -54,6 +55,7 @@ class SortingGrid(tk.Canvas):
         self.tag_bind("img", "<Button-1>", self.onClick1)
         self.tag_bind("img", "<B1-Motion>", self.onMotion1)
         self.tag_bind("img", "<ButtonRelease-1>", self.onRelease1)
+        self.bind("<Delete>", self.onDelete1)
 
     def _get_rank_map(self):
         positions = list()
@@ -76,6 +78,14 @@ class SortingGrid(tk.Canvas):
         x = round(pnt[0]//self.tiledims[0])*self.tiledims[0]
         y = round(pnt[1]//self.tiledims[1])*self.tiledims[1]
         return (x,y)
+
+    def onDelete1(self, event):
+        msg = f'Are you sure you want to delete {self.id_name_map[self.click_id]}'
+        if messagebox.askokcancel(title='delete', message=msg):
+            self.id_name_map.pop(self.click_id)
+            self.id_rank_map.pop(self.click_id)
+            self.delete(self.click_id)
+
 
     def onClick1(self, event):
         self.click = event.x, event.y

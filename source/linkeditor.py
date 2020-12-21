@@ -48,7 +48,7 @@ class Window(tk.Toplevel):
             self.controller.recetly_added = []
 
     def _append_linkfile(self):
-        text = self.textin.get('1.0', 'end-1c')
+        text = self.textin.get('1.0', 'end')
         with open('linkfile.txt', 'a') as linkfile:
             linkfile.write(text)
         self.controller.recently_added += get_recently_appended(text)

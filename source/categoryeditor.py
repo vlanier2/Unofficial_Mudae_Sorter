@@ -8,6 +8,7 @@ import tkinter as tk
 import pickle
 from tkinter import messagebox
 from utilities import parse_linkfile
+from catedittest import CategoryBrowser
 
 WINDOW_GEOMETRY = '1600x900'
 
@@ -43,7 +44,7 @@ class Window(tk.Toplevel):
 
         # Dictionary to Hold Categories
         self.cat_dict = dict()
-        self.cat_dict['uncategoried'] = []
+        #self.cat_dict['uncategoried'] = []
 
 ### Ordering Box
         # Frame
@@ -59,22 +60,13 @@ class Window(tk.Toplevel):
                                                             command=self._finalize_categories)
         self.finalized_button.pack(side=tk.BOTTOM)
 
-### Category Box
-        # Category Box Frame
-        self.catmaker = tk.Frame(self.frame, width=500, height=850, bg='light green')
+# ### Category Box
+        self.catmaker = CategoryBrowser(self.frame, self.cat_dict, width = 600, height=900, bg='light blue')
         self.catmaker.pack(side=tk.LEFT, padx=100)
+        self.catmaker.add_listener(self)
 
-        # Category Name Text Box
-        self.cat_name = tk.Text(self.catmaker, width=20, height=2)
-        self.cat_name.pack(side=tk.TOP)
-
-        # Category Entry Text Box
-        self.cat_entry = tk.Text(self.catmaker, width=50, height=50)
-        self.cat_entry.pack()
-
-        # Catergory Buttons
-        self.finished_button = tk.Button(self.catmaker, text='Finish Category', command=self._make_category)
-        self.finished_button.pack(side=tk.BOTTOM)
+    def notify(self, name):
+        self.catorder.insert('end', name + '\n')
 
     def get_recenty_added(self):
         print(self.controller.recently_added)
@@ -84,28 +76,16 @@ class Window(tk.Toplevel):
         except TypeError:
             pass
 
-    def _make_category(self):
-        title = self.cat_name.get('1.0', 'end-1c')
-        names = self.cat_entry.get('1.0', 'end-1c').split('\n')
-
-        self.cat_dict[title] = names
-        self.cat_entry.delete('1.0', 'end') # clear the text 
-        self.cat_name.delete('1.0', 'end')
-
-        self.catorder.insert('end', title + '\n')
-
-        print(self.cat_dict)
-
     def _finalize_categories(self):
         titles = self.catorder.get('1.0', 'end-1c').strip().split('\n')
-        uncategoried = self.textin.get('1.0', 'end-1c').strip().split('\n')
+        #uncategoried = self.textin.get('1.0', 'end-1c').strip().split('\n')
         finaldict = {}
 
         for title in titles:
             finaldict[title] = self.cat_dict[title]
 
-        if uncategoried != ['']:
-            finaldict['uncategoried'] = uncategoried
+        #if uncategoried != ['']:
+        #    finaldict['uncategoried'] = uncategoried
 
         with open('category_dict', 'wb') as dest:
             pickle.dump(finaldict, dest)

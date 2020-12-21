@@ -27,7 +27,6 @@ class Window(tk.Toplevel):
 
         with open('category_dict', 'rb') as src:    
             self.cat_dict = pickle.load(src)
-            print(self.cat_dict)
 
         with open('linkfile.txt') as lf:
             all_names, links = parse_linkfile(lf)
@@ -57,7 +56,10 @@ class Window(tk.Toplevel):
         button = tk.Button(frame, text='Get Commands', command=self._getstrings)
         button.pack(side=tk.TOP)
 
-        self.textout = tk.Text(frame, width=20, height=50)
+        save_button = tk.Button(frame, text='Save!', command=self._update_dictionary)
+        save_button.pack(side=tk.TOP, pady=5)
+
+        self.textout = tk.Text(frame, width=30, height=30)
         self.textout.pack(side=tk.TOP)
             
         tab_parent.pack(expand=1, fill='both')
@@ -69,7 +71,16 @@ class Window(tk.Toplevel):
         string = '$sortmarry '+ '$'.join(sorted_names)
         self.textout.delete('1.0', 'end')
         self.textout.insert('1.0', string)
-        
+
+    def _update_dictionary(self):
+        categories = list(self.cat_dict.keys())
+        new_dict = {}
+
+        for category, grid in zip(categories, self.grids):
+            new_dict[category] = grid.getSortedNames()
+
+        with open('category_dict', 'wb') as dest:    
+            pickle.dump(new_dict, dest)
 
     def on_close(self):
         self.controller.open_windows['sort'] = None
