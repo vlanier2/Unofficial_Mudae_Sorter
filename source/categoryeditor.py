@@ -36,14 +36,18 @@ class Window(tk.Toplevel):
         # Get Uncategorized Names
         self.textin = tk.Text(self.frame, width=50, height=50)
         self.textin.pack(side=tk.LEFT, padx=100)
-        with open('linkfile.txt') as lf:
-            names = parse_linkfile(lf)[0]
-            for name in names:
-                self.textin.insert('end', name + '\n')
-        #self.get_recenty_added()
+        # with open('linkfile.txt') as lf:
+        #     names = parse_linkfile(lf)[0]
+        #     for name in names:
+        #         self.textin.insert('end', name + '\n')
+        self.get_recenty_added()
 
         # Dictionary to Hold Categories
-        self.cat_dict = dict()
+        try:
+            with open('category_dict', 'rb') as src:
+                self.cat_dict = pickle.load(src)
+        except:
+            self.cat_dict = dict()
         #self.cat_dict['uncategoried'] = []
 
 ### Ordering Box
@@ -54,6 +58,8 @@ class Window(tk.Toplevel):
         # Order Categories
         self.catorder = tk.Text(self.orderingframe, width=50, height=50)
         self.catorder.pack(side=tk.TOP)
+        for category_name in self.cat_dict:
+            self.catorder.insert('end', category_name + '\n')
 
         # Finalize Button
         self.finalized_button = tk.Button(self.orderingframe, text='Finalized Category Order', 
@@ -71,7 +77,7 @@ class Window(tk.Toplevel):
     def get_recenty_added(self):
         print(self.controller.recently_added)
         try:
-            for name in self.controller.recently_added:
+            for name in reversed(self.controller.recently_added):
                 self.textin.insert('1.0', name + '\n')
         except TypeError:
             pass
@@ -89,9 +95,9 @@ class Window(tk.Toplevel):
 
         with open('category_dict', 'wb') as dest:
             pickle.dump(finaldict, dest)
-        with open('category_dict', 'rb') as dest:
-            finaldict = pickle.load(dest)
-        print(finaldict)
+        #with open('category_dict', 'rb') as dest:
+            #finaldict = pickle.load(dest)
+        #print(finaldict)
 
 
     def on_close(self):

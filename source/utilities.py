@@ -22,7 +22,7 @@ def parse_linkfile(openfile):
     return names, links
 
 def get_recently_appended(textin):
-    return [substr.split('-')[0].strip() for substr in textin.split('\n') if substr != '']
+    return [substr.rsplit('-', 1)[0].strip() for substr in textin.split('\n') if substr != '']
 
 def img_from_url(url, size=(69,69)):
     img = Image.open(BytesIO(requests.get(url).content))

@@ -35,7 +35,7 @@ button1 = tk.Button(frame, text='Edit Image Links',
                     command=lambda: linkeditor.openwindow(controlpanel))
 button1.pack(anchor=tk.NW)
 
-button2 = tk.Button(frame, text='Redo Categories',
+button2 = tk.Button(frame, text='Edit Categories',
                     command=lambda: ce.openwindow(controlpanel))
 button2.pack(anchor=tk.NW)
 
